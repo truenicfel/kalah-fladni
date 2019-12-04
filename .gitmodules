@@ -1,0 +1,3 @@
+[submodule "Kalah-Framework"]
+	path = Kalah-Framework
+	url = https://github.com/KWARC/Kalah-Framework.git
