@@ -1,3 +1,11 @@
+/*
+ * Kalah Fladni Agent
+ *
+ * Group members:
+ *  - Adrian Goess
+ *  - Florian Wasmeier
+ *  - Nico Dassler <nico.dassler@fau.de>
+ */
 package info.kwarc.teaching.AI.Kalah.WS1920.agents;
 
 import info.kwarc.teaching.AI.Kalah.Agents.Agent;
@@ -9,7 +17,7 @@ import java.util.List;
  *
  * @author wasme
  */
-public class FladniAgent extends Agent{
+public class FladniAgent extends Agent { 
 
     private final String name;
 
@@ -35,6 +43,8 @@ public class FladniAgent extends Agent{
 
     @Override
     public void init(Board board, boolean playerOne) {
+        // lets create an example tree:
+        
         
     }
 
