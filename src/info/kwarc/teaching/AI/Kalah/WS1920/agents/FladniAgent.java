@@ -25,8 +25,14 @@ public class FladniAgent extends Agent {
 
     private final List<String> nameList;
     
-    public FladniAgent(String name) {
-        this.name = name;
+    private int playerNumber;
+    
+    public FladniAgent() {
+        super();
+        this.name = "Fladni";
+        // this is an illegal value --> has to be 1 or 2
+        // will be properly initialized in init()
+        this.playerNumber = 0;
         nameList = new ArrayList<>();
         nameList.add("Nico Dassler");
         nameList.add("Florian Wasmeier");
@@ -45,6 +51,15 @@ public class FladniAgent extends Agent {
 
     @Override
     public void init(Board board, boolean playerOne) {
+        if (playerOne) {
+            setPlayerNumber(1);
+        } else {
+            setPlayerNumber(2);
+        }
+        
+        
+        int initSeeds = board.initSeeds();
+        
         // lets create an example tree
         FladniNode root = new FladniNode();
         // add 4 children (this makes zero sense because all of the children are
@@ -67,5 +82,16 @@ public class FladniAgent extends Agent {
     public int move() {
         return 0;
     }
+
+    private int getPlayerNumber() {
+        return playerNumber;
+    }
+
+    private void setPlayerNumber(int playerNumber) {
+        if (playerNumber == 1 || playerNumber == 2) {
+            this.playerNumber = playerNumber;        
+        }
+    }
+    
     
 }
