@@ -181,6 +181,9 @@ public class Board {
                 Integer stolenSeeds = copyEnemyHouses.get(stealIndex);
                 copyEnemyHouses.set(stealIndex, 0);
                 copyMyStore += stolenSeeds;
+                // also remove last seed planted
+                copyMyHouses.set(stealIndex, 0);
+                copyMyStore++;
             }
             // place seed in store
             if (seedsInHand > 0) {
@@ -238,6 +241,9 @@ public class Board {
                 Integer stolenSeeds = copyMyHouses.get(stealIndex);
                 copyMyHouses.set(stealIndex, 0);
                 copyEnemyStore += stolenSeeds;
+                // also remove last seed planted
+                copyEnemyHouses.set(stealIndex, 0);
+                copyEnemyStore++;
             }
             // place seed in store
             if (seedsInHand > 0) {

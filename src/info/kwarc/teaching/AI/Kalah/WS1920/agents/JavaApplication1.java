@@ -4,7 +4,6 @@ package info.kwarc.teaching.AI.Kalah.WS1920.agents;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.Board;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
