@@ -8,6 +8,7 @@
  */
 package info.kwarc.teaching.AI.Kalah.WS1920.agents.board;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -201,7 +202,7 @@ public class Board {
         }
         
         Board result = new Board(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore);
-        return Map.entry(
+        return new AbstractMap.SimpleEntry<>(
                 moveAgain, 
                 new Board(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore)
         );
@@ -264,7 +265,7 @@ public class Board {
             seedsInHand = seedSettingResult.getKey();
         }
         
-        return Map.entry(
+        return new AbstractMap.SimpleEntry<>(
                 moveAgain, 
                 new Board(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore)
         );
@@ -289,7 +290,7 @@ public class Board {
             index++;
         }
         // index needs to be decremented by one
-        return Map.entry(seeds, index - 1);
+        return new AbstractMap.SimpleEntry<>(seeds, index - 1);
     }
 
     @Override
