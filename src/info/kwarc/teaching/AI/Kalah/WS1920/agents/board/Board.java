@@ -175,7 +175,6 @@ public class Board {
             if (seedsInHand == 0 && myHouses.get(lastSeedIndex) == 0) {
                 // we have placed the last seed in one of our own houses which
                 // was previously empty
-                moveAgain = true;
                 // steal index
                 int stealIndex = (numberHouses-1) - lastSeedIndex;
                 Integer stolenSeeds = copyEnemyHouses.get(stealIndex);
@@ -189,6 +188,11 @@ public class Board {
             if (seedsInHand > 0) {
                 copyMyStore++;
                 seedsInHand--;
+                // if we placed the last seed in my store I am allowed 
+                // to move again
+                if (seedsInHand == 0) {
+                    moveAgain = true;
+                }
             }
             // place seeds in enemy houses
             seedSettingResult = 
@@ -235,7 +239,6 @@ public class Board {
             if (seedsInHand == 0 && enemyHouses.get(lastSeedIndex) == 0) {
                 // we have placed the last seed in one of our own houses which
                 // was previously empty
-                moveAgain = true;
                 // steal index
                 int stealIndex = (numberHouses-1) - lastSeedIndex;
                 Integer stolenSeeds = copyMyHouses.get(stealIndex);
@@ -249,6 +252,11 @@ public class Board {
             if (seedsInHand > 0) {
                 copyEnemyStore++;
                 seedsInHand--;
+                // if enemy placed the last seed in enemy store he is allowed 
+                // to move again
+                if (seedsInHand == 0) {
+                    moveAgain = true;
+                }
             }
             // place seeds in my houses
             seedSettingResult = 
