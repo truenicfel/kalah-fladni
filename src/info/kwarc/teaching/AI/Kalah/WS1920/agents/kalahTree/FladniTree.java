@@ -8,6 +8,8 @@
  */
 package info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree;
 
+import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.FladniBoard;
+
 /**
  * A basic tree implementation for the Fladni Agent!
  * 
@@ -17,18 +19,13 @@ public class FladniTree {
     
     private final FladniNode root;
 
-    public FladniTree() {
-        this.root = new FladniNode();
+    public FladniTree(FladniBoard board, boolean me) {
+        this.root = new FladniNode(board, me);
     }
-    
-    
-    
-    // TODO: Methods for unfolding the tree or something like that.
     
     public FladniTree(FladniNode root) {
         this.root = root;
     }
-    
     
     
 }

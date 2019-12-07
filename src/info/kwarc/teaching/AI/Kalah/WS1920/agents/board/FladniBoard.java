@@ -17,7 +17,7 @@ import java.util.Objects;
  *
  * @author nicfel
  */
-public class Board {
+public class FladniBoard {
     
 
     private final ArrayList<Integer> myHouses;
@@ -40,7 +40,7 @@ public class Board {
      * @param initalSeedValue The number of seeds in
      * @param houses 
      */
-    public Board(int initalSeedValue, int houses) {
+    public FladniBoard(int initalSeedValue, int houses) {
         this.myHouses = new ArrayList<>(houses);
         this.enemyHouses = new ArrayList<>(houses);
         for (int i = 0; i < houses; i++) {
@@ -63,7 +63,7 @@ public class Board {
      * @param myStore
      * @param enemyStore 
      */
-    public Board(ArrayList<Integer> myHouses, ArrayList<Integer> enemyHouses, int numberHouses, int myStore, int enemyStore) {
+    public FladniBoard(ArrayList<Integer> myHouses, ArrayList<Integer> enemyHouses, int numberHouses, int myStore, int enemyStore) {
         this.myHouses = myHouses;
         this.enemyHouses = enemyHouses;
         this.numberHouses = numberHouses;
@@ -82,7 +82,7 @@ public class Board {
      * @param house which house?
      * @return a map.entry (basically a pair) that contains if you are allowed to move again
      */
-    public Map.Entry<Boolean, Board> makeMove(boolean me, int house) {
+    public Map.Entry<Boolean, FladniBoard> makeMove(boolean me, int house) {
         
         if (house >= numberHouses || house < 0) {
             throw new IllegalArgumentException(
@@ -117,8 +117,8 @@ public class Board {
      * @param me is it me performing the move?
      * @return List of Pairs containing if im allowed to move again and the new board.
      */
-    public ArrayList<Map.Entry<Boolean, Board>> makeAllPossibleMoves(boolean me) {
-        ArrayList<Map.Entry<Boolean, Board>> result = new ArrayList<>();
+    public ArrayList<Map.Entry<Boolean, FladniBoard>> makeAllPossibleMoves(boolean me) {
+        ArrayList<Map.Entry<Boolean, FladniBoard>> result = new ArrayList<>();
         if (me) {
             // me
             for (int index = 0; index < numberHouses; index++) {
@@ -153,7 +153,7 @@ public class Board {
      * @return a pair consisting of a boolean indicating if we can move again
      * and the new game board.
      */
-    private Map.Entry<Boolean, Board> makeMoveMyHouse(int house) {
+    private Map.Entry<Boolean, FladniBoard> makeMoveMyHouse(int house) {
         ArrayList<Integer> copyMyHouses = new ArrayList(myHouses);
         ArrayList<Integer> copyEnemyHouses = new ArrayList(enemyHouses);
         int copyMyStore = myStore;
@@ -201,10 +201,10 @@ public class Board {
             seedsInHand = seedSettingResult.getKey();
         }
         
-        Board result = new Board(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore);
+        FladniBoard result = new FladniBoard(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore);
         return new AbstractMap.SimpleEntry<>(
                 moveAgain, 
-                new Board(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore)
+                new FladniBoard(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore)
         );
         
     }
@@ -217,7 +217,7 @@ public class Board {
      * @return a pair consisting of a boolean indicating if we can move again
      * and the new game board.
      */
-    private Map.Entry<Boolean, Board> makeMoveEnemyHouse(int house) {
+    private Map.Entry<Boolean, FladniBoard> makeMoveEnemyHouse(int house) {
         ArrayList<Integer> copyMyHouses = new ArrayList(myHouses);
         ArrayList<Integer> copyEnemyHouses = new ArrayList(enemyHouses);
         int copyMyStore = myStore;
@@ -267,7 +267,7 @@ public class Board {
         
         return new AbstractMap.SimpleEntry<>(
                 moveAgain, 
-                new Board(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore)
+                new FladniBoard(copyMyHouses, copyEnemyHouses, numberHouses, copyMyStore, copyEnemyStore)
         );
         
     }
@@ -316,7 +316,69 @@ public class Board {
         });
         return stringBuilder.toString();
     }
+    
+    public int getLeftmostNonEmptyHouse(boolean me) {
+        int result = -1;
+        int index = 0;
+        boolean keepSearching = true;
+        
+        while (keepSearching && index < numberHouses) {
+            if (!isHouseEmpty(me, index)) {
+                result = index;
+            }
+            index++;           
+        }
+        
+        return result;
+    }
+    
+    public boolean isGameOver() {
+        return getLeftmostNonEmptyHouse(true) == -1 || getLeftmostNonEmptyHouse(false) == -1;
+    }
+    
+    public boolean isHouseEmpty(boolean me, int index) {
+        boolean result;
+        if (me) {
+            result = myHouses.get(index) == 0;
+        } else {
+            result = enemyHouses.get(index) == 0;
+        }
+        return result;
+    }
 
+    public ArrayList<Integer> getNonEmptyHouseIndices(boolean me) {
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int index = 0; index < numberHouses; index++) {
+            if (!isHouseEmpty(me, index)) {
+                result.add(index);                
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * 
+     * @return int  
+     */
+    public int evaluate() {
+        // draw
+        int result = 0;
+        int myTotalScore = myStore + myHouses.stream().mapToInt(Integer::intValue).sum();
+        int enemyTotalScore = enemyStore + enemyHouses.stream().mapToInt(Integer::intValue).sum();
+        if (isGameOver()) {
+            int winningScore = myTotalScore + enemyTotalScore + 10;
+            if (myTotalScore > enemyTotalScore) {
+                result = winningScore;
+            } else if (myTotalScore < enemyTotalScore) {
+                result = -winningScore;
+            }
+        } else {
+            // evaluation of unfinished boards...
+            result = myTotalScore - enemyTotalScore;
+        }
+        return result;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;
@@ -339,7 +401,7 @@ public class Board {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Board other = (Board) obj;
+        final FladniBoard other = (FladniBoard) obj;
         if (this.myStore != other.myStore) {
             return false;
         }
