@@ -236,37 +236,39 @@ public class FladniNode {
     }
     
     public int newIDS(FladniBoard board, int depthLimit, int currentDepth) {
-        System.out.println("Level: " + currentDepth);
-        System.out.println("Board: ");
-        System.out.println(gameState.toString());
+//        System.out.println("Level: " + currentDepth);
+//        System.out.println("Game State: ");
+//        System.out.println(gameState.toString());
+//        System.out.println("Board: ");
+//        System.out.println(board.toString());
+//        System.out.println("-----------");
         // funktion die uns alle indices expanden
-        ArrayList<Integer> nonEmptyHouseIndices = board.getNonEmptyHouseIndices(me);
-        int upperBound = nonEmptyHouseIndices.size();
-        int offset = 0;
-        for (int index = 0; index < upperBound; index++) {
-            Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(index - offset));
-            if (makeMove.getKey()) {
-                // we are allowed to move again
-                // we call newIDS on this node with a different gamestate
-                int childrenAppended = newIDS(makeMove.getValue(), depthLimit, currentDepth);
-                index = childrenAppended - 1;
-                upperBound += childrenAppended;
-                offset += childrenAppended;
-            } else {
-                if (currentDepth < depthLimit) {
+        if (currentDepth < depthLimit) {
+            ArrayList<Integer> nonEmptyHouseIndices = board.getNonEmptyHouseIndices(me);
+            int upperBound = nonEmptyHouseIndices.size();
+            int offset = 0;
+            for (int index = 0; index < upperBound; index++) {
+                Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(index - offset));
+                if (makeMove.getKey()) {
+                    // we are allowed to move again
+                    // we call newIDS on this node with a different gamestate
+                    int childrenAppended = newIDS(makeMove.getValue(), depthLimit, currentDepth);
+                    //index = childrenAppended - 1;
+                    //upperBound += childrenAppended - 1;
+                    //offset += childrenAppended - 1;
+                } else {
                     // create new child
                     FladniNode child = new FladniNode(this, makeMove.getValue(), !me);
                     child.setAlpha(getAlpha());
                     child.setBeta(getBeta());
                     child.doIds(depthLimit, currentDepth + 1);
                     addChild(child);
-                } else {
-                    // last node level explored by ids
-                    value = gameState.evaluate();
-                    break;
+                        // last node level explored by ids
+                        //value = gameState.evaluate();
+                        //break;
                 }
 
-                // we can now ask our fully explored new child for its alpha, beta and value
+                    // we can now ask our fully explored new child for its alpha, beta and value
                 if (me) {
                     // max/alpha
                     int childValue = getChildren().get(index).getValue();
@@ -294,17 +296,18 @@ public class FladniNode {
 
             }
 
-        }
-
-        if (me) {
-            // max/alpha
-            setValue(getAlpha());
+            if (me) {
+                // max/alpha
+                setValue(getAlpha());
+            } else {
+                setValue(getBeta());
+                return nonEmptyHouseIndices.size();
+            }
         } else {
-            setValue(getBeta());
+            value = gameState.evaluate();
+            
         }
-
-        return nonEmptyHouseIndices.size();
-
+        return -1; // neuer Return Value! Alter Wert war ausserhalb (s. o.)
     }
         
         
@@ -354,6 +357,84 @@ public class FladniNode {
 //        
 //        
 //            
+//    }
+    
+    
+//    public int newIDS(FladniBoard board, int depthLimit, int currentDepth) {
+//        System.out.println("Level: " + currentDepth);
+//        System.out.println("Game State: ");
+//        System.out.println(gameState.toString());
+//        System.out.println("Board: ");
+//        System.out.println(board.toString());
+//        System.out.println("-----------");
+//        // funktion die uns alle indices expanden
+//        
+//        ArrayList<Integer> nonEmptyHouseIndices = board.getNonEmptyHouseIndices(me);
+//        int upperBound = nonEmptyHouseIndices.size();
+//        int offset = 0;
+//        for (int index = 0; index < upperBound; index++) {
+//            Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(index - offset));
+//            if (makeMove.getKey()) {
+//                // we are allowed to move again
+//                // we call newIDS on this node with a different gamestate
+//                int childrenAppended = newIDS(makeMove.getValue(), depthLimit, currentDepth);
+//                index = childrenAppended - 1;
+//                upperBound += childrenAppended - 1;
+//                offset += childrenAppended - 1;
+//            } else {
+//                if (currentDepth < depthLimit) {
+//                    // create new child
+//                    FladniNode child = new FladniNode(this, makeMove.getValue(), !me);
+//                    child.setAlpha(getAlpha());
+//                    child.setBeta(getBeta());
+//                    child.doIds(depthLimit, currentDepth + 1);
+//                    addChild(child);
+//                } else {
+//                    // last node level explored by ids
+//                    value = gameState.evaluate();
+//                    break;
+//                }
+//
+//                // we can now ask our fully explored new child for its alpha, beta and value
+//                if (me) {
+//                    // max/alpha
+//                    int childValue = getChildren().get(index).getValue();
+//
+//                    if (childValue > getAlpha()) {
+//                        setAlpha(childValue);
+//                    }
+//                    if (childValue >= getBeta()) {
+//                        // cancel loop
+//                        index = nonEmptyHouseIndices.size();
+//                    }
+//
+//                } else {
+//                    // min/beta
+//                    int childValue = getChildren().get(index).getValue();
+//                    if (childValue < getBeta()) {
+//                        setBeta(childValue);
+//                    }
+//                    if (childValue <= getAlpha()) {
+//                        // cancel loop
+//                        index = nonEmptyHouseIndices.size();
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//        if (currentDepth < depthLimit){
+//            if (me) {
+//                // max/alpha
+//                setValue(getAlpha());
+//            } else {
+//                setValue(getBeta());
+//            }
+//        }
+//
+//        return nonEmptyHouseIndices.size();
+//
 //    }
 
     public FladniBoard getGameState() {

@@ -28,6 +28,8 @@ public class FladniAgent extends Agent {
     
     private int playerNumber;
     
+    private Board board;
+    
     public FladniAgent() {
         super();
         this.name = "Fladni";
@@ -52,11 +54,16 @@ public class FladniAgent extends Agent {
 
     @Override
     public void init(Board board, boolean playerOne) {
+        
+        // baum aufzubauen
+        this.board = board;
         if (playerOne) {
             setPlayerNumber(1);
         } else {
             setPlayerNumber(2);
         }
+        
+        // HashMap<FladniBoard, FladniNode>
         
         FladniBoard fladniBoard = new FladniBoard(board.houses(), board.initSeeds());
         
@@ -71,6 +78,11 @@ public class FladniAgent extends Agent {
 
     @Override
     public int move() {
+        // das neue board auslesen (this.board)
+        // ein fladni board erzeugen
+        // baum entfalten
+        
+        
         return 0;
     }
 

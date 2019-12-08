@@ -19,13 +19,13 @@ public class JavaApplication1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        FladniBoard board = new FladniBoard(6, 6);
+        FladniBoard board = new FladniBoard(4, 6);
         
                 // lets create an example tree
         FladniNode root = new FladniNode(board, false);
         FladniTree fladniTree = new FladniTree(root);
         
-        root.doIds(2, 0);
+        root.doIds(6, 0);
 
 //        System.out.println("Number of children: " + root.getChildren().size());
 //        for (FladniNode node: root.getChildren()) {
