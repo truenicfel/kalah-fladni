@@ -63,17 +63,18 @@ public class FladniAgent extends Agent {
             setPlayerNumber(2);
         }
         
-        // HashMap<FladniBoard, FladniNode>
-        
         FladniBoard fladniBoard = new FladniBoard(board.houses(), board.initSeeds());
         
-        int initSeeds = board.initSeeds();
-        
-        // lets create an example tree
-        FladniNode root = new FladniNode(fladniBoard, true);
+        // lets create the game tree
+        FladniNode root = new FladniNode(fladniBoard, playerOne);
         FladniTree fladniTree = new FladniTree(root);
         
-        // this tree is so amazing i cant handle it
+        while (!Thread.interrupted()) {
+            fladniTree.startIdsAtRoot(playerNumber);
+        }
+        
+        
+        
     }
 
     @Override

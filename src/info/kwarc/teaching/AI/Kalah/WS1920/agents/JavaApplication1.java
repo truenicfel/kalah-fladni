@@ -22,10 +22,10 @@ public class JavaApplication1 {
         FladniBoard board = new FladniBoard(4, 6);
         
                 // lets create an example tree
-        FladniNode root = new FladniNode(board, false);
+        FladniNode root = new FladniNode(board, true);
         FladniTree fladniTree = new FladniTree(root);
         
-        root.doIds(6, 0);
+        root.doIds(3, 0);
 
 //        System.out.println("Number of children: " + root.getChildren().size());
 //        for (FladniNode node: root.getChildren()) {

@@ -236,14 +236,13 @@ public class FladniNode {
     }
     
     public int newIDS(FladniBoard board, int depthLimit, int currentDepth) {
-//        System.out.println("Level: " + currentDepth);
-//        System.out.println("Game State: ");
-//        System.out.println(gameState.toString());
-//        System.out.println("Board: ");
-//        System.out.println(board.toString());
-//        System.out.println("-----------");
-        // funktion die uns alle indices expanden
+        System.out.println("Depth: " + currentDepth);
+        System.out.println("Board: ");
+        System.out.println(board.toString());
+        System.out.println("-----------");
+        int childrenAppended = 0;
         if (currentDepth < depthLimit) {
+            // get all house indices that could be used to make a move
             ArrayList<Integer> nonEmptyHouseIndices = board.getNonEmptyHouseIndices(me);
             int upperBound = nonEmptyHouseIndices.size();
             int offset = 0;
@@ -252,10 +251,15 @@ public class FladniNode {
                 if (makeMove.getKey()) {
                     // we are allowed to move again
                     // we call newIDS on this node with a different gamestate
-                    int childrenAppended = newIDS(makeMove.getValue(), depthLimit, currentDepth);
-                    //index = childrenAppended - 1;
-                    //upperBound += childrenAppended - 1;
-                    //offset += childrenAppended - 1;
+                    int childrenAppendedByRecursiveCall = 
+                            newIDS(makeMove.getValue(), depthLimit, currentDepth);
+                    childrenAppended += childrenAppendedByRecursiveCall;
+                    // this has to be -1 because the child we are currently processing
+                    // has not been added but replaced with the children from the call
+                    // to newIDS above
+                    index += childrenAppendedByRecursiveCall - 1;
+                    upperBound += childrenAppendedByRecursiveCall - 1;
+                    offset += childrenAppendedByRecursiveCall - 1;
                 } else {
                     // create new child
                     FladniNode child = new FladniNode(this, makeMove.getValue(), !me);
@@ -263,9 +267,7 @@ public class FladniNode {
                     child.setBeta(getBeta());
                     child.doIds(depthLimit, currentDepth + 1);
                     addChild(child);
-                        // last node level explored by ids
-                        //value = gameState.evaluate();
-                        //break;
+                    childrenAppended++;
                 }
 
                     // we can now ask our fully explored new child for its alpha, beta and value
@@ -307,7 +309,7 @@ public class FladniNode {
             value = gameState.evaluate();
             
         }
-        return -1; // neuer Return Value! Alter Wert war ausserhalb (s. o.)
+        return childrenAppended;
     }
         
         

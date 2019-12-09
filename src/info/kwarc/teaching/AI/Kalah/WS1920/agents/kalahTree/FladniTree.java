@@ -27,5 +27,9 @@ public class FladniTree {
         this.root = root;
     }
     
+    public void startIdsAtRoot(int limit) {
+        root.doIds(limit, 0);
+    }
+    
     
 }
