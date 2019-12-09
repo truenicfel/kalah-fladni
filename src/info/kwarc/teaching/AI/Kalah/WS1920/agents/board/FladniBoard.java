@@ -182,7 +182,7 @@ public class FladniBoard {
                 copyEnemyHouses.set(stealIndex, 0);
                 copyMyStore += stolenSeeds;
                 // also remove last seed planted
-                copyMyHouses.set(stealIndex, 0);
+                copyMyHouses.set(lastSeedIndex, 0);
                 copyMyStore++;
             }
             // place seed in store
@@ -246,7 +246,7 @@ public class FladniBoard {
                 copyMyHouses.set(stealIndex, 0);
                 copyEnemyStore += stolenSeeds;
                 // also remove last seed planted
-                copyEnemyHouses.set(stealIndex, 0);
+                copyEnemyHouses.set(lastSeedIndex, 0);
                 copyEnemyStore++;
             }
             // place seed in store

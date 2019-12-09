@@ -72,6 +72,14 @@ public class FladniAgent extends Agent {
         while (!Thread.interrupted()) {
             fladniTree.startIdsAtRoot(playerNumber);
         }
+        // assume variable depth for agent
+        // assume depth = 3
+        // set index = depth + 1
+        // while (!Thread.interrupted())
+        //      doids(index)
+        //      wenn zeit fuer doids < 5sek
+        //          depth = index
+        //      index ++
         
         
         
@@ -82,6 +90,34 @@ public class FladniAgent extends Agent {
         // das neue board auslesen (this.board)
         // ein fladni board erzeugen
         // baum entfalten
+        ArrayList<Integer> myHouses = new ArrayList<>();
+        ArrayList<Integer> enemyHouses = new ArrayList<>();
+        int enemyPlayerNumber = getPlayerNumber()%2 + 1;
+        for (int index = 0; index < board.houses(); index++) {
+            myHouses.add(board.getSeed(getPlayerNumber(), index));
+            enemyHouses.add(board.getSeed(enemyPlayerNumber, index));
+        }
+        
+        FladniBoard fladniBoard = new FladniBoard(
+                myHouses, enemyHouses, board.houses(), 
+                board.getScore(getPlayerNumber()), board.getScore(enemyPlayerNumber));
+        
+        // lets create the game tree
+        FladniNode root = new FladniNode(fladniBoard, true);
+        FladniTree fladniTree = new FladniTree(root);
+        // do ids
+        int limit = 0;
+        int step = 3; // step = depth
+        while (!Thread.interrupted()) {
+            
+            limit += step;
+            fladniTree.startIdsAtRoot(limit);
+            
+            // find best move and write to
+            root.getValue();
+            root.getChildren();
+            //super.timeoutMove = ...
+        }
         
         
         return 0;

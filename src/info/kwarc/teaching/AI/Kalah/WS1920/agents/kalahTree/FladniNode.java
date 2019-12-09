@@ -232,34 +232,35 @@ public class FladniNode {
     }
     
     public void doIds(int depthLimit, int currentDepth) {
-        newIDS(gameState, depthLimit, currentDepth);
+        ids(gameState, depthLimit, currentDepth);
     }
     
-    public int newIDS(FladniBoard board, int depthLimit, int currentDepth) {
-        System.out.println("Depth: " + currentDepth);
-        System.out.println("Board: ");
-        System.out.println(board.toString());
-        System.out.println("-----------");
+    public int ids(FladniBoard board, int depthLimit, int currentDepth) {
+//        System.out.println("Depth: " + currentDepth);
+//        System.out.println("Board: ");
+//        System.out.println(board.toString());
+//        System.out.println("-----------");
+        
         int childrenAppended = 0;
         if (currentDepth < depthLimit) {
             // get all house indices that could be used to make a move
             ArrayList<Integer> nonEmptyHouseIndices = board.getNonEmptyHouseIndices(me);
-            int upperBound = nonEmptyHouseIndices.size();
-            int offset = 0;
-            for (int index = 0; index < upperBound; index++) {
-                Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(index - offset));
+            int childrenIndex = 0;
+            int moveIndex = 0;
+            boolean keepSearching = true;
+            while (keepSearching && moveIndex < nonEmptyHouseIndices.size()) {
+                Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(moveIndex));
                 if (makeMove.getKey()) {
                     // we are allowed to move again
-                    // we call newIDS on this node with a different gamestate
+                    // we call ids on this node with a different gamestate
                     int childrenAppendedByRecursiveCall = 
-                            newIDS(makeMove.getValue(), depthLimit, currentDepth);
+                            ids(makeMove.getValue(), depthLimit, currentDepth);
                     childrenAppended += childrenAppendedByRecursiveCall;
                     // this has to be -1 because the child we are currently processing
                     // has not been added but replaced with the children from the call
-                    // to newIDS above
-                    index += childrenAppendedByRecursiveCall - 1;
-                    upperBound += childrenAppendedByRecursiveCall - 1;
-                    offset += childrenAppendedByRecursiveCall - 1;
+                    // to ids above
+                    childrenIndex += childrenAppendedByRecursiveCall - 1;
+                    
                 } else {
                     // create new child
                     FladniNode child = new FladniNode(this, makeMove.getValue(), !me);
@@ -268,52 +269,53 @@ public class FladniNode {
                     child.doIds(depthLimit, currentDepth + 1);
                     addChild(child);
                     childrenAppended++;
-                }
-
                     // we can now ask our fully explored new child for its alpha, beta and value
-                if (me) {
-                    // max/alpha
-                    int childValue = getChildren().get(index).getValue();
-
-                    if (childValue > getAlpha()) {
-                        setAlpha(childValue);
-                    }
-                    if (childValue >= getBeta()) {
-                        // cancel loop
-                        index = nonEmptyHouseIndices.size();
-                    }
-
-                } else {
-                    // min/beta
-                    int childValue = getChildren().get(index).getValue();
-                    if (childValue < getBeta()) {
-                        setBeta(childValue);
-                    }
-                    if (childValue <= getAlpha()) {
-                        // cancel loop
-                        index = nonEmptyHouseIndices.size();
-                    }
-
+                    keepSearching = alphaBetaPruning(childrenIndex);
                 }
-
+                moveIndex++;
+                childrenIndex++;
             }
-
             if (me) {
                 // max/alpha
                 setValue(getAlpha());
             } else {
-                setValue(getBeta());
-                return nonEmptyHouseIndices.size();
+                setValue(getBeta());                
             }
         } else {
-            value = gameState.evaluate();
-            
+            value = gameState.evaluate();    
         }
         return childrenAppended;
     }
         
         
+private boolean alphaBetaPruning(int childrenIndex){
+    boolean keepSearching = true;
     
+    if (me) {
+        // max/alpha
+        int childValue = getChildren().get(childrenIndex).getValue();
+
+        if (childValue > getAlpha()) {
+            setAlpha(childValue);
+        }
+        keepSearching = !(childValue >= getBeta());
+
+    } else {
+        // min/beta
+        int childValue = getChildren().get(childrenIndex).getValue();
+        if (childValue < getBeta()) {
+            setBeta(childValue);
+        }
+        keepSearching = !(childValue <= getAlpha());
+
+    }
+    
+//    if (!keepSearching) {
+//        System.out.println("Pruned something :)");
+//    }
+    
+    return keepSearching;
+}   
 //    public void expandNodeIDS(int depthLimit, int currentDepth) {
 //        System.out.println("Level: " + currentDepth);
 //        System.out.println("Board: ");
@@ -362,7 +364,7 @@ public class FladniNode {
 //    }
     
     
-//    public int newIDS(FladniBoard board, int depthLimit, int currentDepth) {
+//    public int ids(FladniBoard board, int depthLimit, int currentDepth) {
 //        System.out.println("Level: " + currentDepth);
 //        System.out.println("Game State: ");
 //        System.out.println(gameState.toString());
@@ -378,8 +380,8 @@ public class FladniNode {
 //            Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(index - offset));
 //            if (makeMove.getKey()) {
 //                // we are allowed to move again
-//                // we call newIDS on this node with a different gamestate
-//                int childrenAppended = newIDS(makeMove.getValue(), depthLimit, currentDepth);
+//                // we call ids on this node with a different gamestate
+//                int childrenAppended = ids(makeMove.getValue(), depthLimit, currentDepth);
 //                index = childrenAppended - 1;
 //                upperBound += childrenAppended - 1;
 //                offset += childrenAppended - 1;
