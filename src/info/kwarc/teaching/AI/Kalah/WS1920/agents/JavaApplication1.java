@@ -2,6 +2,10 @@
 package info.kwarc.teaching.AI.Kalah.WS1920.agents;
 
 import Tester.FladniTester;
+import info.kwarc.teaching.AI.Kalah.Agents.HumanPlayer;
+import info.kwarc.teaching.AI.Kalah.Board;
+import info.kwarc.teaching.AI.Kalah.Game;
+import info.kwarc.teaching.AI.Kalah.Interfaces.Fancy;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.FladniBoard;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniNode;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniTree;
@@ -22,9 +26,8 @@ public class JavaApplication1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        FladniBoard board = new FladniBoard(6, 6);
+        FladniBoard board = new FladniBoard(4, 6);
         
-
 
 //        System.out.println("Number of children: " + root.getChildren().size());
 //        for (FladniNode node: root.getChildren()) {
@@ -36,52 +39,16 @@ public class JavaApplication1 {
         // FladniBoard intialisierung von Hand:
         
         ArrayList<Integer> myHouses = new ArrayList<>(Arrays.asList(new Integer[] 
-            {1, 0, 0, 0, 0, 3}
+            {0,0,2,0,0,6}
         ));
         
         ArrayList<Integer> enemyHouses = new ArrayList<>(Arrays.asList(new Integer[] 
-            {1, 2, 3, 4, 10, 6}
+            {0,0,2,0,1,1}
         )); 
         
-        int myStore = 0;
-        int enemyStore = 0;
+        int myStore = 14;
+        int enemyStore = 22;
         int numberHouses = 6; // important! must be the same number of elements as in
-        // {} above
-        
-        //FladniBoard board = new FladniBoard(myHouses, enemyHouses, numberHouses, myStore, enemyStore);
-
-                        // lets create an example tree
-        FladniNode root = new FladniNode(board, true);
-        FladniTree fladniTree = new FladniTree(root);
-        
-        root.doIds(3, 0);
-        
-        Thread thread = new Thread(new FladniTester());
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException ex) {
-            System.out.println(ex.toString());
-        }
-        
-        System.out.println("hello im the main thread");
-
-//        System.out.println("Initial board: ");
-//        System.out.println(board.toString());
-//        System.out.println("My possible moves: ");
-//        ArrayList<Map.Entry<Boolean, FladniBoard>> makeAllPossibleMoves = board.makeAllPossibleMoves(true);
-//        makeAllPossibleMoves.stream().forEachOrdered((currentBoard) -> {
-//            System.out.println("Board: ");
-//            System.out.println(currentBoard.getValue().toString());
-//            System.out.println("Move again: " + currentBoard.getKey());
-//        });
-//        System.out.println("Enemy possible moves: ");
-//        makeAllPossibleMoves = board.makeAllPossibleMoves(false);
-//        makeAllPossibleMoves.stream().forEachOrdered((currentBoard) -> {
-//            System.out.println("Board: ");
-//            System.out.println(currentBoard.getValue().toString());
-//            System.out.println("Move again: " + currentBoard.getKey());
-//        });
 
     }
     

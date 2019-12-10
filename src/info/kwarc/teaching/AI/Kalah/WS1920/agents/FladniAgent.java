@@ -8,6 +8,7 @@
  */
 package info.kwarc.teaching.AI.Kalah.WS1920.agents;
 
+import Tester.FladniTester;
 import info.kwarc.teaching.AI.Kalah.Agents.Agent;
 import info.kwarc.teaching.AI.Kalah.Board;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.FladniBoard;
@@ -15,6 +16,8 @@ import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniNode;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniTree;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -62,27 +65,6 @@ public class FladniAgent extends Agent {
         } else {
             setPlayerNumber(2);
         }
-        
-        FladniBoard fladniBoard = new FladniBoard(board.houses(), board.initSeeds());
-        
-        // lets create the game tree
-        FladniNode root = new FladniNode(fladniBoard, playerOne);
-        FladniTree fladniTree = new FladniTree(root);
-        
-        while (!Thread.interrupted()) {
-            fladniTree.startIdsAtRoot(playerNumber);
-        }
-        // assume variable depth for agent
-        // assume depth = 3
-        // set index = depth + 1
-        // while (!Thread.interrupted())
-        //      doids(index)
-        //      wenn zeit fuer doids < 5sek
-        //          depth = index
-        //      index ++
-        
-        
-        
     }
 
     @Override
@@ -102,25 +84,45 @@ public class FladniAgent extends Agent {
                 myHouses, enemyHouses, board.houses(), 
                 board.getScore(getPlayerNumber()), board.getScore(enemyPlayerNumber));
         
-        // lets create the game tree
-        FladniNode root = new FladniNode(fladniBoard, true);
-        FladniTree fladniTree = new FladniTree(root);
-        // do ids
-        int limit = 0;
-        int step = 3; // step = depth
-        while (!Thread.interrupted()) {
-            
-            limit += step;
-            fladniTree.startIdsAtRoot(limit);
-            
-            // find best move and write to
-            root.getValue();
-            root.getChildren();
-            //super.timeoutMove = ...
+        
+        int cores = Runtime.getRuntime().availableProcessors();
+        
+        ArrayList<FladniTester> runners = new ArrayList<>();
+        
+        int depth = 8;
+        for (int index = 0; index < cores/2; index++) {
+            FladniTester thread = new FladniTester(fladniBoard, depth, true);
+            runners.add(thread);
+            depth++;
+            thread.start();
+        }
+        int bestMove = 0;
+        
+        // we find out all the possible moves
+        ArrayList<Integer> possibleMoves = fladniBoard.getNonEmptyHouseIndices(true);
+        if (possibleMoves.size() > 0) {
+            // set the default as the first available
+            bestMove = possibleMoves.get(0);
+        }
+        
+        timeoutMove_$eq(bestMove);
+        
+        for (FladniTester tester: runners) {
+            try {
+                tester.join();
+                if (tester.bestMove >= 0) {
+                    bestMove = tester.bestMove;
+                    timeoutMove_$eq(bestMove);
+                }
+            } catch (InterruptedException ex) {
+                System.out.println(ex.toString());
+            }
         }
         
         
-        return 0;
+            
+        
+        return bestMove;
     }
 
     private int getPlayerNumber() {
@@ -132,6 +134,8 @@ public class FladniAgent extends Agent {
             this.playerNumber = playerNumber;        
         }
     }
+    
+    
     
     
 }

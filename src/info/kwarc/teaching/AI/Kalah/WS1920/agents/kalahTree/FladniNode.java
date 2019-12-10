@@ -53,6 +53,7 @@ public class FladniNode {
      */
     private final boolean me;
     
+    private int bestMove;
     
     /**
      * Create a FladniNode with given parent and children.
@@ -74,6 +75,7 @@ public class FladniNode {
         } else {
             this.value = Integer.MAX_VALUE;
         }
+        this.bestMove = 0;
         
     }
     
@@ -96,6 +98,7 @@ public class FladniNode {
         } else {
             this.value = Integer.MAX_VALUE;
         }
+        this.bestMove = 0;
     }
 
     /**
@@ -115,6 +118,7 @@ public class FladniNode {
         } else {
             this.value = Integer.MAX_VALUE;
         }
+        this.bestMove = 0;
     }
 
     /**
@@ -136,6 +140,7 @@ public class FladniNode {
         } else {
             this.value = Integer.MAX_VALUE;
         }
+        this.bestMove = 0;
     }
     
     /**
@@ -251,6 +256,7 @@ public class FladniNode {
             while (keepSearching && moveIndex < nonEmptyHouseIndices.size()) {
                 Map.Entry<Boolean, FladniBoard> makeMove = board.makeMove(me, nonEmptyHouseIndices.get(moveIndex));
                 if (makeMove.getKey()) {
+                    int bestMoveBefore = bestMove;
                     // we are allowed to move again
                     // we call ids on this node with a different gamestate
                     int childrenAppendedByRecursiveCall = 
@@ -260,7 +266,9 @@ public class FladniNode {
                     // has not been added but replaced with the children from the call
                     // to ids above
                     childrenIndex += childrenAppendedByRecursiveCall - 1;
-                    
+                    if (bestMoveBefore != bestMove) {
+                        bestMove = nonEmptyHouseIndices.get(moveIndex);
+                    }
                 } else {
                     // create new child
                     FladniNode child = new FladniNode(this, makeMove.getValue(), !me);
@@ -270,8 +278,8 @@ public class FladniNode {
                     addChild(child);
                     childrenAppended++;
                     // we can now ask our fully explored new child for its alpha, beta and value
-                    keepSearching = alphaBetaPruning(childrenIndex);
-                }
+                    keepSearching = alphaBetaPruning(childrenIndex, nonEmptyHouseIndices.get(moveIndex));
+               }
                 moveIndex++;
                 childrenIndex++;
             }
@@ -286,10 +294,14 @@ public class FladniNode {
         }
         return childrenAppended;
     }
+
+    public int getBestMove() {
+        return bestMove;
+    }
         
         
-private boolean alphaBetaPruning(int childrenIndex){
-    boolean keepSearching = true;
+private boolean alphaBetaPruning(int childrenIndex, int moveIndex){
+    boolean keepSearching;
     
     if (me) {
         // max/alpha
@@ -297,6 +309,8 @@ private boolean alphaBetaPruning(int childrenIndex){
 
         if (childValue > getAlpha()) {
             setAlpha(childValue);
+            // best move updaten
+            bestMove = moveIndex;
         }
         keepSearching = !(childValue >= getBeta());
 
@@ -305,6 +319,8 @@ private boolean alphaBetaPruning(int childrenIndex){
         int childValue = getChildren().get(childrenIndex).getValue();
         if (childValue < getBeta()) {
             setBeta(childValue);
+            // best move updaten
+            bestMove = moveIndex;
         }
         keepSearching = !(childValue <= getAlpha());
 

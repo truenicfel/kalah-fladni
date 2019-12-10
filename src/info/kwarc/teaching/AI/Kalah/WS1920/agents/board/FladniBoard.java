@@ -363,16 +363,21 @@ public class FladniBoard {
     public int evaluate() {
         // draw
         int result = 0;
-        int myTotalScore = myStore + myHouses.stream().mapToInt(Integer::intValue).sum();
-        int enemyTotalScore = enemyStore + enemyHouses.stream().mapToInt(Integer::intValue).sum();
         if (isGameOver()) {
+            int myTotalScore = (myStore + myHouses.stream().mapToInt(Integer::intValue).sum());
+            int enemyTotalScore = (enemyStore + enemyHouses.stream().mapToInt(Integer::intValue).sum());
             int winningScore = myTotalScore + enemyTotalScore + 10;
             if (myTotalScore > enemyTotalScore) {
                 result = winningScore;
             } else if (myTotalScore < enemyTotalScore) {
                 result = -winningScore;
+            } else {
+                // draw
+                result = 0;
             }
         } else {
+            int myTotalScore = myStore * 2 + myHouses.stream().mapToInt(Integer::intValue).sum();
+            int enemyTotalScore = enemyStore * 2 + enemyHouses.stream().mapToInt(Integer::intValue).sum();
             // evaluation of unfinished boards...
             result = myTotalScore - enemyTotalScore;
         }

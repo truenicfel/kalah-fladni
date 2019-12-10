@@ -5,26 +5,43 @@
  */
 package Tester;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.FladniBoard;
+import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniNode;
+import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniTree;
+
 
 /**
  *
  * @author root
  */
-public class FladniTester implements Runnable {
+public class FladniTester extends Thread {
 
-    public int result;
+    public int bestMove;
+    
+    private final FladniBoard fladniBoard;
+    
+    private final int depth;
+    
+    private final boolean me;
+
+    public FladniTester(FladniBoard fladniBoard, int depth, boolean me) {
+        this.bestMove = -1;
+        this.fladniBoard = fladniBoard;
+        this.depth = depth;
+        this.me = me;
+    }
+    
+    
     
     @Override
     public void run() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FladniTester.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("Hello I am a Thread!");
         
+        // lets create the game tree
+        FladniNode root = new FladniNode(fladniBoard, true);
+        
+        root.doIds(depth, 0);
+        
+        bestMove = root.getBestMove();
     }
     
 }
