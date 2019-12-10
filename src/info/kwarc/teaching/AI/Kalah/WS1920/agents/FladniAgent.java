@@ -8,16 +8,12 @@
  */
 package info.kwarc.teaching.AI.Kalah.WS1920.agents;
 
-import Tester.FladniTester;
 import info.kwarc.teaching.AI.Kalah.Agents.Agent;
 import info.kwarc.teaching.AI.Kalah.Board;
+import info.kwarc.teaching.AI.Kalah.WS1920.agents.Tester.FladniTester;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.FladniBoard;
-import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniNode;
-import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniTree;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

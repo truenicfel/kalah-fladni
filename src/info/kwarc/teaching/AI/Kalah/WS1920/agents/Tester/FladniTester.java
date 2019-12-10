@@ -1,9 +1,12 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Kalah Fladni Agent
+ *
+ * Group members:
+ *  - Adrian Goess
+ *  - Florian Wasmeier
+ *  - Nico Dassler <nico.dassler@fau.de>
  */
-package Tester;
+package info.kwarc.teaching.AI.Kalah.WS1920.agents.Tester;
 
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.board.FladniBoard;
 import info.kwarc.teaching.AI.Kalah.WS1920.agents.kalahTree.FladniNode;
